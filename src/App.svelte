@@ -1,16 +1,21 @@
 <script>
+	import { writable } from 'svelte/store'
 	import Todo from './component/Todo.svelte'
 
 	let title = ''
-	let todos = []
-	let id = 0;
+	let todos = writable([])
+	let id = 0
 
 	function createTodo() {
-		todos.push({
+		if(!title.trim()) {
+			title = ''
+			return
+		}
+		$todos.push({
 			id,
 			title
 		})
-		todos = todos
+		$todos = $todos
 		title = ''
 		id++
 	}
@@ -26,9 +31,10 @@
 		Create Todo
 	</button>
 
-	{#each todos as todo}
+	{#each $todos as todo}
+	<!-- todos라는 store 객체를 넘겨줌 -->
 		<Todo
-			bind:todos={todos}
+			{todos}
 			{todo}
 		/>
 	{/each}
